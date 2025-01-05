@@ -1,16 +1,17 @@
-import { User } from "../models/user.model"
+import { User } from "../models/user.model.js"
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
-export const Register = async(req,res) => {
+export const register = async(req,res) => {
     try {
-        const {name,username, email, password} = req.body
-        if(!name || !username|| !email|| !password){
+        const {name,userName, email, password} = req.body
+        if(!name || !userName|| !email|| !password){
             return res.status(400).json({
                 message : 'All field required',
                 success : false
             })
         }
-        const user = await User.findOne(email);
+        const user = await User.findOne({email});
         if(user){
             return res.status(401).json({
                 message : 'User already exist',
@@ -23,7 +24,7 @@ export const Register = async(req,res) => {
 
         await User.create({
             name,
-            username,
+            userName,
             email,
             password : hashedPassword
         })
@@ -34,5 +35,47 @@ export const Register = async(req,res) => {
         })
     } catch (error) {
         console.log(error)
+    }
+}
+
+
+export const login = async(req,res) => {
+    try {
+        const {email,password} = req.body;
+        if(!email || !password){
+            return res.status(400).json({
+                message : "filled all the blanks",
+                success : false
+            })
+        }
+
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(401).json({
+                message : 'user does not exist',
+                success : false
+            })
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if(!isPasswordMatch){
+            return res.status(400).json({
+                message : 'incorrect password',
+                success : false
+            })
+        }
+
+        const tokenData = {
+            userId : user._id
+        }
+        const token = await jwt.sign(tokenData, process.env.JWT_TOKEN,{expiresIn:"1d"})
+        return res.status(201).cookie("token", token,{expiresIn:'1d', httpOnly: true}).json({
+            message : `welcome back ${user.name}`,
+            success : true,
+        })
+
+    } catch (error) {
+        console.log(error);
+        
     }
 }
