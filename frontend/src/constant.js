@@ -1,0 +1,3 @@
+export const twitter_image = "https://img.freepik.com/premium-vector/twitter-new-x-logo-design-vector_1340851-70.jpg"
+export const profile_photo = 'https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg'
+export const banner_image = 'https://d3rgan1k6iolj7.cloudfront.net/media/lc4pcjbb/web-development-page-banner1.webp?width=1519&height=593&format=webp&rnd=133135899127670000'
