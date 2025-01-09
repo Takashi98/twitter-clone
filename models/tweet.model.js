@@ -6,7 +6,7 @@ const tweetSchema = new mongoose.Schema({
         required : true
     },
     likes:{
-        types: Array,
+        type: Array,
         default: []
     },
     userId:{
